@@ -1,6 +1,10 @@
 ## ICO Instructions
 Instructions for the ICO and Presale held by Mono. The successor of Clash.
 
+- [Conditions](#Conditions)
+- [Instructions](#Instructions)
+- [Value](#Value)
+
 ### Conditions
 #### Presale
 This is a private presale. Known investors and miners are allowed to invest ethereum to get their MONO Token. The presale allows investors to buy tokens 10% cheaper. In addition, another 20% discount 
@@ -11,7 +15,7 @@ The MONO ICO is public, therefore regulations are needed. Additionally, previous
 
 ### Instructions
 1. **Opening form**: The google form can be found in [here](https://docs.google.com/forms/d/1Khexwfsz0-VoomFEkisO18JznrXqlU4CjI1clBN1kXM). Enter your data there.
-2. **Entering CLS Preferences**: If you are interested in using your CLS for an additional discount, enter the amount of (whole) CLS you want to use for a discount and the transaction ID spit out by your wallet. Make sure you use mixin so that nobody can use your TxID. Note that you have to pay the fees. 
+2. **Entering CLS Preferences**: If you are interested in using your CLS for an additional discount, enter the amount of (whole) CLS you want to use for a discount. Then send your CLS to `1FvgmBLpAgrKVXMeLzG7PVhFDevQULZ4GUaFDS6vWZPwMiXgYsf8KeAcfTYwNT1cpcRr4uRLnM51cd8mWpBUBqDu77FrNDs` and enter the transaction ID spit out by your wallet. Make sure you use mixin so that nobody can use your TxID. Note that you have to pay the fees. 
 3. **Steps using Ethereum**: First, send your prefered amount of ETH to `0x4b09b4aeA5f9C616ebB6Ee0097B62998Cb332275` and enter your ethereum transaction ID. Afterwords sign this string `a247209c0fa3fef7d82deed7dcf44e4a670531a288884c64f705aa15bd2c33a1` with your ethereum private key. If you do not know how, get your private key from your ethereum wallet and use a tool like [this](https://github.com/warner/python-ecdsa). The signature has be submitted.
 
 ### Value
