@@ -5,9 +5,8 @@ The only real limitation. The only concern at Mono. Memory (storage) usage aswel
 	- [Transactions](#Transactions)
 	- [Verification](#Verification)
 	- [Blocks](#Blocks)
+- [Light-Wallet](#Light-Wallet)
 - [Sharding](#Sharding)
-	- [Lattice](#Lattice)
-	- [RAID](#RAID)
 
 ### Optimizations
 #### Transactions
@@ -32,10 +31,8 @@ This results in exactly 191 bytes per block (+ coinbase transaction) in addition
 
 To save more space, purging can be implemented. This might cause sharding or security issues due to hash missmatches.
 
-### Sharding
-All of the following solutions give up parts of the security of a blockchain in favor of saving memory space and bandwidth to allow everyone to participate. All of the following solutions require some kind of validator or master node, which implies that a tiered system is implemented. Tiered systems have a strong impact on decentralisation aswell as security.
-#### Lattice
-To save even more memory space, a lattice system can be utilised. Everyone influenced by a certain transaction saves this transaction to their own lattice. This implies that you only have to broadcast your transactions to known validators (instead of every node). Those validators will then check whether or not they want to include your transaction in the next block. If so, they broadcast the block to eachother and allow every non-validator to make requests to their database. If alice sent ten MMONO to bob, bob will then check in every hour at the validators to see if a new transaction for him came in. If so, he adds it to his own lattice. 
+### Light-Wallet
+To assure the security and independance of a light wallet, a lattice-like system can be utilised. Everyone influenced by a certain transaction saves this transaction to their own lattice. This implies that you only have to broadcast your transactions to known validators (instead of every node). Those validators will then check whether or not they want to include your transaction in the next block. If so, they broadcast the block to eachother and allow every non-validator to make requests to their database. If alice sent ten MMONO to bob, bob will then check in every hour at the validators to see if a new transaction for him came in. If so, he adds it to his own lattice. 
 
 An appoach like this would drastically reduce the security of a network since alice and bob have to trust the validators. Since being a validator is not a privelege but instead a paid burden, alice and bob can become validators as well by asking for whole blocks from the validators and mining themselves. This would reduce the trust factor and create a decentralised opt-in validator network.
 
@@ -47,20 +44,20 @@ An appoach like this would drastically reduce the security of a network since al
 **Con**:
 1. **Mining Storage**: Since pools are validators and the only known full nodes, miners have to be forced to run the whole chain aswell.
 
-In conclusion, a lattice system would increase security and speed for every casual user while not impacting the rest of the ecosystem. Due to the security and speed changes, it is possible that more people who previously hosted full nodes do not do so anymore, unless they are mining.
+In conclusion, a lattice system would increase security and speed for every casual user while not impacting the rest of the ecosystem. Due to the security and speed changes, it is possible that more people who previously hosted full nodes do not do so anymore, unless they are hosting a masternode now. More on that in [#Sharding](#Sharding).
 
-#### RAID
-More specific, a variation of [RAID 6](https://en.wikipedia.org/wiki/Standard_RAID_levels#RAID_6). Masternodes, nodes that paid a fee to support the network, can be used to store blockchain data. By implementing a RAID-like system where each node has a number {0, 1, 2, 3}, and every number is set to store specific blocks (0 - {0, 1}, 1 - {1, 2},..), every node will always store half of the blockchain instead of the whole blockchain and drop the rest. Masternodes are then paid for every request they fulfill, which means that well-known and active masternodes will earn much more than an idling masternode hosted on a raspberry pi. Since masternodes are the memory of the chain, while validators are its processor, validators will either have to make requests to masternodes which in turn would heavily increase their delays (because they have to download a few whole blocks per hash), host the whole chain themselves without being rewarded for it, or become a masternode to get two payments at once. Note that you can host two masternodes on the same device on the same blockchain, which would allow miners to host a 0 and a 2 masternode while also mining. This is highly recommended for nodes that already have to be a full node, such as miners, explorers or exchanges.
+### Sharding
+A variation of RAID 6 can be utilised to save even more space aswell as adding scalability. The more nodes, the faster, smaller and more secure the network. Masternodes, nodes that paid a fee to support the network, can be used to store blockchain data. Every node stores every header (3MB/year) and additionally stores transactions assigned to them. Each transaction is stored by 1024 nodes, which means that a 51% attack is not possible. Additionally 1024 nodes dropping off the network when they get paid for staying online and their payment per minute increases over time is very unlikely. To calculate what nodes store which transactions, the following formula is used `if( (TxID%activeNodeCount)>>10 == (UserID%activeNodeCount)>>10 ) storeTransaction()`. Where the TxID is calculated like this `hash(hash(Tx) + hash(BlockHeader))` and the UserID is the hash of the public key of your UserID-keypair. This assures that only active masternodes (over the last week) get to store transactions while also making it unpredictable which nodes will store a transaction. A reward after successfully. To make sure that nobody pays a significant amount of MONO to host a masternode, while still disallowing the creation of billions of nodes without holding a stake, a fee of 1 MMONO has to be paid (sent to 000..000, effectively burning it). This allows everyone to participate easily as one or many masternodes while disallowing the creation of many nodes with the purpose of attacking the network. Since full nodes, such as blockchain explorers or exchanges, are forced to host the full chain, those nodes are able to use one thousand masternodes simultaniously allowing them to fulfill many requests to the network, therefore gaining MONO from holding the chain, something they would've done anyway. This is a further incentive to hold blockchain explorers, pools or even participate as a masternode since you can easily gain a few MONO without using processing power but instead your bandwidth. To assure that there are not billions of mobile phones on the network which essentially are low-quality nodes (they are only connected to WiFi a few hours per day, they usually have poor upload speeds), the fee of 1 MMONO (1 USD) is used. A masternode would either have to be hosted on a server for a long time (more than a month) to start making profit for the hoster or a bunch of mobile phones or raspberry pi's would have to be connected using LAN to a high-quality network. This is because a masternode gets paid for every request they fulfill. If a node asks for the number of transactions from alice, the node also sends a transaction with it. Assuming that one request is worth 1MONO, bob would have to pay 1 KMONO to find out all data of all 999 transactions alice ever sent or 16.5 KMONO to download the entire chain of the last year. This can be seen as a fee for light nodes.
 
 **Pro**:
-1. **Memory**: By using half the space, every full node would host 13GiB in previously mentioned bitcoin example. Compared to bitcoins 200GiB thats a lot less.
-2. **Incentive**: While certain types of nodes already are forced to host full nodes, even more people will get incentivised to use their bandwidth to support the chain.
-3. **Reward**: Nodes that already store the full chain will get a reward for doing so. Miners get two rewards at once.
-4. **Speed**: By having more high-bandwidth nodes (such as servers, which is usually what a masternode is hosted on) and less low-quality full nodes such as home PCs, picking an active node aswell as downloading the whole chain (synchronising with the network) becomes much faster.
+1. **Memory**: By using 1024 nodes to store one transaction, memory usage and memory distribution increases the more nodes a network has.
+2. **Scalability**: Instead of slowing down the more nodes this network has, it gets faster by having more distributed memory aswell as less storage on each node.
+3. **Incentive**: While certain types of nodes already are forced to host full nodes, even more people will get incentivised to use their bandwidth to support the chain.
+4. **Reward**: Nodes that already store the full chain will get a reward for doing so. Miners get two rewards at once.
+5. **Speed**: By having more high-bandwidth nodes (such as servers, which is usually what a masternode is hosted on) and less low-quality full nodes such as home PCs, picking an active node aswell as downloading the whole chain (synchronising with the network) becomes much faster.
 
 **Con**:
-1. **51% Attack**: By holding 51% of all masternodes considered active, trustworthy and well-known, an attacker might cause a chain split out of malicious intend. This is unlikely and results in no gain, but a possible attack scenario.
-2. **Sybil Attack**: By having only "verified" (via burning) nodes as masternodes, a sybil attack becomes much more possible since an attacker needs 51% of the capital invested in masternodes aswell as trust by the users instead of 51% of the nodes and the best ping times.
+Already covered above. Nothing worth mentioning.
 
-A RAID-like masternode system would therefore reduce the security an insignificant bit while reducing memory usage, increasing the quality of nodes and therefore the network. Overall this means that the user sees a drastic performance increase. This also implies that, by growing, this network will get faster and increase its own security. 
+A RAID-like masternode system would therefore reduce the security an insignificant bit while reducing memory usage, increasing the quality of nodes and therefore the network. Overall this means that the user and the full node see a drastic performance increase. So much, that a common user might think about becoming a "full shard". This also implies that, by growing, this network will get faster and increase its own security. 
 
