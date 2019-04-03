@@ -23,7 +23,7 @@ In conclusion, blocks contain
 3. **Timestamp**: 4 byte, 32bit unsigned integer
 4. **Nonce**: 8 byte, 64bit unsigned integer to prove the work done in order to mine the block
 5. **Coinbase Transaction**: 8 byte (out), since a lot of the transaction is already known
-6. **Transactions**: 96 byte per transaction, mentioned above
+6. **Transactions**: 92 byte per transaction, mentioned above
 
 The difficulty of a current block aswell as the current reward can be calculated using a set of timestamps. To not be forced to recalculate all difficulties at boot, those are stored in a local database, but not shared over the network.
 
