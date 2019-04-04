@@ -10,24 +10,25 @@ The only real limitation. The only concern at Mono. Memory (storage) usage aswel
 
 ### Optimizations
 #### Transactions
-Bitcoin and other currencies use a lot of bloat in their transactions. In the case of bitcoin, there is one great issue in addition to the storage of signatures. Bitcoin also uses a DAG of transactions instead of using balances like ethereum does. Using balances allows having one input instead of plenty of inputs. By having one input, one output, a nonce (to prevent replay attacks) and an amount to transact, a raw, unsigned transaction is 76 bytes big. While this certainly is a good start, it can be optimised, by using [usernames](#usernames), which allows to save another 48 bytes, by using two 8 byte usernames instead of two 32 byte public keys. Therefore a raw, unsigned transaction has a total size of 28 byte. A signature still has to be added, which adds another 64 bytes. Therefore each transaction has a total size of 92 bytes.
+Bitcoin and other currencies use a lot of bloat in their transactions. In the case of bitcoin, there is one great issue in addition to the storage of signatures. Bitcoin also uses a DAG of transactions instead of using balances like ethereum does. Using balances allows having one input instead of plenty of inputs. By having one input, one output and an amount to transact, a raw, unsigned transaction is 76 bytes big. While this certainly is a good start, it can be optimised, by using [usernames](#usernames), which allows to save another 48 bytes, by using two 8 byte usernames instead of two 32 byte public keys. Therefore a raw, unsigned transaction has a total size of 24 byte. A signature still has to be added, which would add another 64 byte (resulting in a total of 88 bytes). Using the BLS signature scheme, all signatures can be stacked to one for the whole block, resulting to a constant memory usage, covered in [#verification](#verification).
 
 #### Verification
-To save space at verifications, a merkle tree is not used. Instead, sequential hashing is used to verify all transactions stored in the same block at once. All transactions are split into blocks of 4GiB and then hashed using Blake2b-512. The resulting hash is then appended to the next block of data, hashed again using Blake2b-512. The first block contains the stacked BLS signature and the 512bit hash of the previous block in addition to the transaction data. The results is a final hash of constant size containing the previous block hash and all transaction data. Calculating this hash takes about one second per 15 million transactions. A potential issue is that by tampering the transactions, an attacker might be able to receive the same final hash. This would allow the previous hash to be wrong aswell, which means that all previous blocks can be changed. Since nodes already agreed on previous blocks, the only possible scenario where this could cause issues is a sybil attack performed by a computationally speaking big thread. A thread big enough to be able to void 512bit security. In the following, we will assume that 512bit security secures a block more than enough. (Just a sidenote, this is the same security level as if you had to crack 2^256 hashes in bitcoin.)
+To save space at verifications, a merkle tree is not used. Instead, sequential hashing is used to verify all transactions stored in the same block at once. All transactions are split into blocks of 4GiB and then hashed using Blake2b-512. The resulting hash is then appended to the next block of data, hashed again using Blake2b-512. The first block contains the stacked BLS signature and the 512bit hash of the previous block in addition to the transaction data. The results is a final hash of constant size the aggregated signature, the previous block hash and all transaction data. Calculating this hash takes about one second per 46 million transactions, using one normal consumer-grade CPU core (3.40GHz, Skylake architecture). A potential issue is that by tampering the transactions, an attacker might be able to receive the same final hash. This would allow the previous hash to be wrong aswell, which means that all previous blocks can be changed. Since nodes already agreed on previous blocks, the only possible scenario where this could cause issues is a sybil attack performed by a computationally speaking big thread. A thread big enough to be able to void 512bit security. In the following, we will assume that 512bit security secures a block more than enough. As a sidenote, this is the same security level as if you had to crack 2^256 hashes in bitcoin.
 
 
 #### Blocks
 In conclusion, blocks contain 
 1. **Transaction count**: 8 byte, 64 bit unsigned integer.
 2. **Verification**: 64 byte in total, mentioned above
-3. **Timestamp**: 4 byte, 32bit unsigned integer
-4. **Nonce**: 8 byte, 64bit unsigned integer to prove the work done in order to mine the block
-5. **Coinbase Transaction**: 8 byte (out), since a lot of the transaction is already known
-6. **Transactions**: 92 byte per transaction, mentioned above
+3. **BLS Signature**: 96 byte in total, as stated [here](https://github.com/Chia-Network/bls-signatures)
+4. **Timestamp**: 4 byte, 32bit unsigned integer
+5. **Nonce**: 8 byte, 64bit unsigned integer to prove the work done in order to mine the block
+6. **Coinbase Transaction**: 8 byte (out), since a lot of the transaction is already known
+7. **Transactions**: 24 byte per transaction, mentioned above
 
 The difficulty of a current block aswell as the current reward can be calculated using a set of timestamps. To not be forced to recalculate all difficulties at boot, those are stored in a local database, but not shared over the network.
 
-This results in exactly 92 bytes per block in addition to 92 byte per transacion. Applying this on the transactions and blocks in bitcoin, this chain would have a total size of 34.3 GiB where bitcoin has with its 400 million transactions and 570,000 blocks a total size of 200GiB. The actual amount stored on a node can be further reduced by implementing [sharding](#Sharding).
+This results in exactly 188 bytes per block in addition to 24 byte per transacion. Applying this on the transactions and blocks in bitcoin, this chain would have a total size of 9.0 GiB where bitcoin has with its 400 million transactions and 570,000 blocks a total size of 200GiB. The actual amount stored on a node can be further reduced by implementing [sharding](#Sharding).
 
 To save more space, purging can be implemented. This might cause sharding or security issues due to hash missmatches.
 
@@ -57,7 +58,7 @@ A variation of RAID 6 can be utilised to save even more space aswell as adding s
 5. **Speed**: By having more high-bandwidth nodes (such as servers, which is usually what a masternode is hosted on) and less low-quality full nodes such as home PCs, picking an active node aswell as downloading the whole chain (synchronising with the network) becomes much faster.
 
 **Con**:
-Already covered above. Nothing worth mentioning.
+1. **Bandwidth**: A sharded node would still have to download an entire block to verify it and then host the transactions its supposed to host. The data downloaded would be there just to verify once and then drop it. The entire block wont ever be broadcasted again by those shard-nodes which results in a potential for a lower bandwidth in total. Assuming that there are many nodes participating in shards, this becomes less of an issue.
 
 A RAID-like masternode system would therefore reduce the security an insignificant bit while reducing memory usage, increasing the quality of nodes and therefore the network. Overall this means that the user and the full node see a drastic performance increase. So much, that a common user might think about becoming a "full shard". This also implies that, by growing, this network will get faster and increase its own security. 
 
