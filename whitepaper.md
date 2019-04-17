@@ -185,6 +185,6 @@ The MONO ICO is public, therefore regulations are needed. Additionally, previous
 3. **Steps using Ethereum**: First, send your prefered amount of ETH to `0x4b09b4aeA5f9C616ebB6Ee0097B62998Cb332275` and enter your ethereum transaction ID. Afterwords sign this string `a247209c0fa3fef7d82deed7dcf44e4a670531a288884c64f705aa15bd2c33a1` with your ethereum private key. If you do not know how, get your private key from your ethereum wallet and use a tool like [this](https://github.com/warner/python-ecdsa). The signature has be submitted.
 
 ### Value
-Since there is no discount in the ICO, the price is set to 0.01 ETH (1 USD) per MMONO. During the presale, it is 90ct or 70ct respectively. There are six months premined, with the emission discussed [here](https://github.com/ClashLuke/Mono-Papers/blob/master/whitepaper.md), this results in 8,100,000 MMONO that are premined. 8.1 Million of these are available for the ICO resulting in a hardcap of 8.1 Million US Dollar for this ICO to rise.
+Since there is no discount in the ICO, the price is set to 0.01 ETH per MMONO. During the presale, it is 0.009 ETH or 0.007 ETH respectively. There are six months premined, with the emission discussed [here](https://github.com/ClashLuke/Mono-Papers/blob/master/whitepaper.md), this results in 8,235,000 MMONO that are premined. 8.1 Million of these are available for the ICO resulting in a hardcap of 82,350 ETH for this ICO to rise.
 
 
