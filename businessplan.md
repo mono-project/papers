@@ -96,6 +96,7 @@ The second year is the last year with negative money. From the then on we are ab
 To overcome this first depression a large funding has to be raised during an initial coin offering. Therefore the minimum amount raised in such an ICO is 660'888€.
 #### Expected-Sales
 The previous year generates the money used to pay expenses of the next year. Therefore there is no money in the inital two years and the second year pays for the third year.
+
 | Year | Sales in € | Income in € | Comment |
 | --- | --- | --- | --- |
 | 2019 | 0 | -330'444 | Buffer of 1 year |
