@@ -91,9 +91,6 @@ Every active user has (in average) 100€ trading volume per day. We use a 0.1% 
 | 12 weak VPS | 1'440€ |
 | **Total** | **330'440€** |
 
-#### Analysis
-The second year is the last year with negative money. From the then on we are able to pay the current salary with last years income. If we were bufferless, we would be able to be profitable after the first year. This is not wanted, since having a large buffer is important in a quickly changing business area.
-To overcome this first depression a large funding has to be raised during an initial coin offering. Therefore the minimum amount raised in such an ICO is 660'888€.
 #### Expected-Sales
 The previous year generates the money used to pay expenses of the next year. Therefore there is no money in the inital two years and the second year pays for the third year.
 
@@ -104,3 +101,7 @@ The previous year generates the money used to pay expenses of the next year. The
 | 2021 | 1'035'000 | 88'056 | Exchange online for 6 months |
 | 2022 | 2'089'125 | 704'556 | Search Engine online |
 | 2023 | 2'804'906 | 1'758'681 | First unpredicted year |
+
+#### Analysis
+The second year is the last year with negative money. From the then on we are able to pay the current salary with last years income. If we were bufferless, we would be able to be profitable after the first year. This is not wanted, since having a large buffer is important in a quickly changing business area.
+To overcome this first depression a large funding has to be raised during an initial coin offering. Therefore the minimum amount raised in such an ICO is 660'888€.
