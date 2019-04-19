@@ -4,6 +4,7 @@ Scalability by design
 **Contents**
 - [General](#General)
 	- [Proof of Work](#Proof-of-Work)
+	- [Proof of Stake Reputation](#Proof-of-Stake-Reputation)
 	- [Scalability](#Scalability)
 		- [Blocks](#Blocks)
 		- [Transactions](#Transactions)
@@ -45,6 +46,15 @@ Many currently existing proof of work schemes have a few major issues. They are 
 5. **Light client fast startup**: a light client should be able to become fully operational and able to verify blocks within 2 seconds in C.
 
 To suit those needs, mono utilises a new proof of work scheme called [SquashPoW](https://github.com/ClashLuke/Squash-Hash). It allows high hashrates, asymmetry and [ASIC resistance](https://github.com/ClashLuke/Squash-Hash/blob/master/docs/asic.md), just like its bigger brother [Ethash](https://github.com/ethereum/wiki/wiki/Ethash) does. The difference between Ethash and Squash is that Squash is an entirely new algorithm, designed to be as resistant against ASICs as possible, while Ethash utilises algorithms that are designed to be as powerful as possible on an ASIC.
+
+### Proof-of-Stake-Reputation
+To fight against the energy usage of the proof of work consensus model, an different consensus model is needed. A consensus model purely dependant on intrinsic values, ignoring all changes outside of itself. Proof of Stake does exactly that, but while it allows a reduction of power usage, it also decreases the security of a currency and, by having an inflation, also lowers the value of a currency. To increase the security of the network, an incentive for constant staking has to be found. Additionally honest stakers have to be rewarded for their honesty, increasing the number of honest stakers. To allow both changes, PoSR (Proof of Stake Reputation) is being used. 
+
+In contrast to PoSV, PoSR increases the reward over time for a long-time staker. This implies that honest stakers with a high reputation have an increased total stake. The basic formula to calculate ones stake is `stake = coins staked * stake age`. This allows for a linear growth of stake over time, allowing new stakers to participate, while also giving old stakers a huge reward. As an example, one coin which has been staked for three years is worth as much as 1000 coins which have been staked for one day. This implies that an attacker would either have to buy over 90% of the currently active coin supply or stake for many years. Assuming that there is a constant group of old stakers (with three years advantage), an attacker would have to stake nine years to reduce the required funds from 99.9% to 64%. The probability of this happenening is quite low, therefore providing additional resistance against 51% or even 90% attacks. The downside is that old stake is able to dominate the network, if the staking node is constantly online and providing services to the network. Considering the added security, this does not appear to be an issue.
+
+One last issue with Proof of Stake that has to be resolved is the annual inflation. Instead of an exponential inflation, a static inflation and a reduction of emission over time is wanted. In bitcoin this was done using block reward halving, but MONO uses its own specifically designed [Emission Curve](#Emission). To continue having an emission like this, a value from the outside has to be taken to create a difficulty which is dependant on the price. Since the value of holding a [masternode](#sharding) increases if the price of the coin increases and the total number of active masternodes is known to the network and the activity status is easily checkable, the emission curve takes this number in account, instead of the proof of work difficulty. Therefore the block reward goes to the one validator and the emission curve continues progressing just as normal.
+
+A general issue with the Proof of Stake consensus model is the "Nothing at Stake" problem, where one can vote on all chains, in case the chain splits. This issue is resolved by having [masternodes](#sharding) which always vote on one chain and act as checkpointers. To achieve a chain split, 50% of the masternodes would have to vote on each chain, which is a highly unlikely edgecase. PoSR will be actived after masternodes have been activated, following the current plan, this would be two years after the launch, resulting in 2020 - Launch, 2021 - Masternodes, 2022 - PoSR.
 
 ### Scalability
 
