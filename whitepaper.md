@@ -3,8 +3,10 @@ Scalability by design
 
 **Contents**
 - [General](#General)
-	- [Proof of Work](#Proof-of-Work)
-	- [Proof of Stake Reputation](#Proof-of-Stake-Reputation)
+	- [Consensus Models](#Consensus-Models)
+		- [Proof of Work](#Proof-of-Work)
+		- [Proof of Stake Reputation](#Proof-of-Stake-Reputation)
+		- [Proof of Weighted Work](#Proof-of-Weighted-Work)
 	- [Scalability](#Scalability)
 		- [Blocks](#Blocks)
 		- [Transactions](#Transactions)
@@ -37,7 +39,8 @@ Scalability by design
 
 ## General
 In the following there will be improvements to the classic blockchain protocol listed. Those certainly are necessary to achieve true scalability aswell as providing a strong resistance against centralisation and attacks.
-### Proof-of-Work
+### Consensus-Models
+#### Proof-of-Work
 Many currently existing proof of work schemes have a few major issues. They are easily implementable on ASICs, depend on computational power or do not allow a decentralised network by favoring GPU miners and farms too much. To counter those issues, the following design considerations have to apply for a given algorithm:
 1. **IO saturation**: The algorithm should consume nearly the entire available memory access bandwidth (this is a strategy toward achieving ASIC resistance, the argument being that commodity RAM, especially in GPUs, is much closer to the theoretical optimum than commodity computing capacity)
 2. **CPU friendliness**: Targeting CPUs is difficult due to existing issues such as botnets, GPUs and ASICs. To decrease their performance, the algorithm uses special CPU features that already are there in modern CPUs but are missing in modern GPUs and are costly to implement in ASICs. Since GPUs have a bigger memory bus, the tradeoff is an almost equal situation between GPUs and CPUs.
@@ -47,7 +50,7 @@ Many currently existing proof of work schemes have a few major issues. They are 
 
 To suit those needs, mono utilises a new proof of work scheme called [SquashPoW](https://github.com/ClashLuke/Squash-Hash). It allows high hashrates, asymmetry and [ASIC resistance](https://github.com/ClashLuke/Squash-Hash/blob/master/docs/asic.md), just like its bigger brother [Ethash](https://github.com/ethereum/wiki/wiki/Ethash) does. The difference between Ethash and Squash is that Squash is an entirely new algorithm, designed to be as resistant against ASICs as possible, while Ethash utilises algorithms that are designed to be as powerful as possible on an ASIC.
 
-### Proof-of-Stake-Reputation
+#### Proof-of-Stake-Reputation
 To fight against the energy usage of the proof of work consensus model, an different consensus model is needed. A consensus model purely dependant on intrinsic values, ignoring all changes outside of itself. Proof of Stake does exactly that, but while it allows a reduction of power usage, it also decreases the security of a currency and, by having an inflation, also lowers the value of a currency. To increase the security of the network, an incentive for constant staking has to be found. Additionally honest stakers have to be rewarded for their honesty, increasing the number of honest stakers. To allow both changes, PoSR (Proof of Stake Reputation) is being used. 
 
 In contrast to PoSV, PoSR increases the reward over time for a long-time staker. This implies that honest stakers with a high reputation have an increased total stake. The basic formula to calculate ones stake is `stake = coins staked * stake age`. This allows for a linear growth of stake over time, allowing new stakers to participate, while also giving old stakers a huge reward. As an example, one coin which has been staked for three years is worth as much as 1000 coins which have been staked for one day. This implies that an attacker would either have to buy over 90% of the currently active coin supply or stake for many years. Assuming that there is a constant group of old stakers (with three years advantage), an attacker would have to stake nine years to reduce the required funds from 99.9% to 64%. The probability of this happenening is quite low, therefore providing additional resistance against 51% or even 90% attacks. The downside is that old stake is able to dominate the network, if the staking node is constantly online and providing services to the network. Considering the added security, this does not appear to be an issue.
@@ -56,8 +59,10 @@ One last issue with Proof of Stake that has to be resolved is the annual inflati
 
 A general issue with the Proof of Stake consensus model is the "Nothing at Stake" problem, where one can vote on all chains, in case the chain splits. This issue is resolved by having [masternodes](#sharding) which always vote on one chain and act as checkpointers. To achieve a chain split, 50% of the masternodes would have to vote on each chain, which is a highly unlikely edgecase. PoSR will be actived after masternodes have been activated, following the current plan, this would be two years after the launch, resulting in 2020 - Launch, 2021 - Masternodes, 2022 - PoSR.
 
-### Scalability
+#### Proof-of-Weighted-Work
+Many cryptocurrencies tried combining proof of stake with proof of work. A common idea is splitting the blocks, so that there is one block PoW, one block PoS. A different variation is buying the oppurturnity to be allowed to mine. Both of these reduce decentralization and security, therefore are not an option. This means that something else has to be found, to achieve a security similar to proof of work, or higher, while solving the problem of energy usage. Aiwe from karbowanets proposed [Proof of Work with Stake](https://github.com/Karbovanets/papers/blob/master/PoW%20with%20Stake.md), which increases the security of the network by adding stake to proof of work and forcing an attacker to have both 51% of the hashrate as well as 51% of the emitted and active coins. While this already is a strong solution, it adds a minimum requirement reducint availability and decentralization to achieve a higher security. Instead of having a minimum (changing) requirement to be able to submit a block, a bonus for staking more coins might be ideal. By having a difficulty equal to `personalDifficulty = globalDifficulty/personalStake*activeState`, a higher stake equals to a lower difficulty. This means that an increase of reward can be achieved by either buying more coins or increasing the hashrate. Meaning that if there are miners, there is demand for the coin, increasing price in early stages and reducing energy usage later on.
 
+### Scalability
 #### Blocks
 In contrast to other cryptocurrencies, mono utilises a very high block target. With its 2 minutes per block, it takes less than five minutes for your transaction to receive its first confirmation. Utilising a 2 minute block time, the network would average at about 35 transactions per second, assuming the same block size limits were chosen as they are in bitcoin. But in contrast to bitcoin, mono uses real resources as the upper bound. Bandwidth and processing speed (validation). By having an unlimited block size, the network will accept it if a miner were to include the whole mempool. This of course would require them to have a strong bandwidth to be able to transmit their currently mined blocks. Since plenty of servers already utilise 1GiB/s upload speeds and the mining node will in most cases be a server, not the miner themselves (pool mining), this does not inherit a limitation for either user. Instead, this allows to have a much better bloat to transaction ratio than other cryptos have. With a fixed growth of 48MiB per year, the only thing that impacts the size of the blockchain are transactions. Assuming that all mining nodes have 1GiB/s upload bandwidth which is entirely utilised by submitting a block, the network would have a theoretical maximum of 11.2 million transactions per second. Since not all nodes have this download capacity, lets assume we have the average german node with 2MiB/s down, 200KiB/s. This would conclude in a synchronising speed of ten thousand transactions per second.
 
