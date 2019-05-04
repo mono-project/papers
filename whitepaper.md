@@ -15,6 +15,7 @@ Scalability by design
 		- [Proof of Weighted Work](#Proof-of-Weighted-Work)
 			- [Concept](#Concept)
 			- [Reputation-Variant](#Reputation-Variant)
+		- [Proof of Progress](#Proof-of-Progress)
 	- [Memory](#Memory)
 		- [Optimizations](#Optimizations)
 			- [Transaction](#Transaction)
@@ -109,6 +110,9 @@ Many cryptocurrencies tried combining proof of stake with proof of work. A commo
 
 ##### Reputation-Variant
 The issue with using a PoS variant like PoSR for this, is that the stake has a relatively high impact on the consensus without providing additional security. To add security, the funds have to be locked up when using as stake, as proposed [here](https://github.com/Karbovanets/papers/blob/master/PoW%20with%20Stake.md). This can be done by using PoSR and ignoring currently locked up funds. The advantage of PoSR+Lock-up+PoW in favor of PoS+Lock-up+PoW is that PoSR heavily rewards stake time. This results in a behaviour which removes the incentive of supporing a pool, since those have a lower staking reward and require a higher trust and more stake. Therefore PoWW-SR has strong decentralization and security since it combines both [Proof of Stake Reputation](#Proof-of-Stake-Reputation) and [Proof of Work](#Proof-of-Work) additionally it reduces the energy consumption and increases demand as shown in the [Concept](#Concept) description.
+
+#### Proof-of-Progress
+The last consensus algorithm used in MONO is PoP (proof of progress). Its a cross-chain algorithm allowing to add another block to its top when a specific number of blocks on another chain is passed. Assuming that the other chain continously progresses and also is secure, the PoP chain is as secure and as fast as the "main chain" without adding any kind of bloat to the chain. This consensus algorithm will be used to deploy token on the MONO network.
 
 ### Memory
 The only real limitation. The main concern at Mono. Memory (storage) usage aswell as bandwidth usage.
