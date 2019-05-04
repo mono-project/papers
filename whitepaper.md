@@ -28,6 +28,7 @@ Scalability by design
 		- [On-Chain](#On-Chain)
 		- [Specifications](#Specifications)
 		- [Security](#Security)
+	- [Token](#Token)
 - [Crypto](#Crypto)
 	- [Squash](#Squash)
 		- [Squash 0](#Squash_0)
@@ -112,7 +113,7 @@ Many cryptocurrencies tried combining proof of stake with proof of work. A commo
 The issue with using a PoS variant like PoSR for this, is that the stake has a relatively high impact on the consensus without providing additional security. To add security, the funds have to be locked up when using as stake, as proposed [here](https://github.com/Karbovanets/papers/blob/master/PoW%20with%20Stake.md). This can be done by using PoSR and ignoring currently locked up funds. The advantage of PoSR+Lock-up+PoW in favor of PoS+Lock-up+PoW is that PoSR heavily rewards stake time. This results in a behaviour which removes the incentive of supporing a pool, since those have a lower staking reward and require a higher trust and more stake. Therefore PoWW-SR has strong decentralization and security since it combines both [Proof of Stake Reputation](#Proof-of-Stake-Reputation) and [Proof of Work](#Proof-of-Work) additionally it reduces the energy consumption and increases demand as shown in the [Concept](#Concept) description.
 
 #### Proof-of-Progress
-The last consensus algorithm used in MONO is PoP (proof of progress). Its a cross-chain algorithm allowing to add another block to its top when a specific number of blocks on another chain is passed. Assuming that the other chain continously progresses and also is secure, the PoP chain is as secure and as fast as the "main chain" without adding any kind of bloat to the chain. This consensus algorithm will be used to deploy token on the MONO network.
+The last consensus algorithm used in MONO is PoP (proof of progress). Its a cross-chain algorithm allowing to add another block to its top when a specific number of blocks on another chain is passed. Assuming that the other chain continously progresses and also is secure, the PoP chain is as secure and as fast as the "main chain" without adding any kind of bloat to the chain. This consensus algorithm will be used to deploy [token](#Token) on the MONO network.
 
 ### Memory
 The only real limitation. The main concern at Mono. Memory (storage) usage aswell as bandwidth usage.
@@ -192,6 +193,8 @@ The size of eight bytes is chosen to allow a maximum number of 18 quintillion (1
 #### Security
 Since registrations are logged on the blockchain, they are immutable. This allows saying that a `UserName:PublicKey` pair is known to every participant, while being sure that they wont be altered by a third party. A doubled registration can not happen because a block containing a doubled registration would be dropped (since it is invalid), this would force a new block to be generated and the miner of this block to not get any reward. Therefore it is not possible to take over a username nor a public key as well as changing a database entry, thanks to blockchain technology.
 
+### Token
+In ETH, EOS and most currently existing cryptocurrencies, token are saved on the main chain. The advantages of a token are simple, it allows easy interaction with the main chain and adds security since the token doesn't need its own chain. Yet it bloats the main chain, something MONO does not want. Therefore token and other second-layer applications are out-sourced using [PoP](#Proof-of-Progress). This means token can still utilise the security of the main network and have easy interaction, without adding any unecessary information to full nodes or forcing miners to validate transactions they dont care about. Additionally it allows everyone to use a language of their liking. Most importantly it allows other chains to have other rules, such as its own fees that are unrelated to MONO, changed block rewards or add ring signatures. Thanks to the token allowing any language and absolute freedom, there are literally no limitations. To allow the best performance in interaction with the MONO cryptocurrency, an API will be provided, working similarly to most currently known payment APIs. 
 
 ## Crypto
 ### Squash
